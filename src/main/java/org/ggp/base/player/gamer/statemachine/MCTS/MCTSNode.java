@@ -86,6 +86,11 @@ public class MCTSNode {
         return res;
     }
 
+    // TODO: change this to getChildren?
+    public Map<Move, List<MCTSNode>> getChildrenMap() {
+        return this.children;
+    }
+
     public void setChildren(Map<Move, List<MCTSNode>> children) {
         this.children = children;
     }
