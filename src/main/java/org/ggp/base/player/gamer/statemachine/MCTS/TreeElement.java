@@ -5,10 +5,16 @@ import org.ggp.base.util.statemachine.Move;
 public abstract class TreeElement {
 	private Move move;
 	private TreeNode parent;
+	private MCTSGamer gamer;
 
-	public TreeElement(Move move) {
+	public TreeElement(Move move, MCTSGamer gamer, TreeNode parent) {
 		this.setMove(move);
-		this.setParent(null);
+		this.setParent(parent);
+		this.gamer = gamer;
+	}
+
+	public MCTSGamer getGamer() {
+		return this.gamer;
 	}
 
 	public Move getMove() {

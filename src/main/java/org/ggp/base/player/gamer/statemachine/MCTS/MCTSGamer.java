@@ -13,10 +13,6 @@ import org.ggp.base.util.statemachine.exceptions.TransitionDefinitionException;
 
 public class MCTSGamer extends StateMachineGamer {
 
-	private TreeNode currentNode = new TreeNode(null);
-
-
-
 	@Override
 	public StateMachine getInitialStateMachine() {
 		// TODO Auto-generated method stub
@@ -36,13 +32,14 @@ public class MCTSGamer extends StateMachineGamer {
 		StateMachine theMachine = getStateMachine();
         long start = System.currentTimeMillis();
         long finishBy = timeout - 1000;
+        TreeNode currentNode = new TreeNode(null);
 
         List<Move> moves = theMachine.getLegalMoves(getCurrentState(), getRole());
         for (Move move: moves) {
-        	currentNode.addChild(new TreeNode(move));
+        	currentNode.addChild(new TreeNode(move,this,null));
         }
         while(System.currentTimeMillis() < finishBy) {
-        	TreeLeaf selectedLeaf = this.currentNode.Select();
+        	TreeLeaf selectedLeaf = currentNode.Select();
         	TreeNode selectedNode = selectedLeaf.Extend();
         	boolean simResultedInWin = selectedNode.Simulate();
         	selectedNode.AddResult(simResultedInWin);
@@ -50,7 +47,7 @@ public class MCTSGamer extends StateMachineGamer {
 
         //It's OK to have a favorite child here
         TreeElement mostPromisingChild = null;
-        for (TreeElement child : this.currentNode.getChilds()) {
+        for (TreeElement child : currentNode.getChilds()) {
         	if (mostPromisingChild == null || mostPromisingChild.GetScore() < child.GetScore()) {
         		mostPromisingChild = child;
         	}

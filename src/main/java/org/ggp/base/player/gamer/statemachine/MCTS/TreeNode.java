@@ -2,8 +2,10 @@ package org.ggp.base.player.gamer.statemachine.MCTS;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.ggp.base.util.statemachine.Move;
+import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
 
 public class TreeNode extends TreeElement {
 
@@ -12,9 +14,31 @@ public class TreeNode extends TreeElement {
 	private int wins = 0;
 	private int totalPlays = 0;
 
-	public TreeNode(Move move) {
-		super(move);
+	public TreeNode(Move move, MCTSGamer gamer) throws MoveDefinitionException {
+		this(move,gamer,null);
+	}
+
+	public TreeNode(Move move, MCTSGamer gamer, TreeNode parent) throws MoveDefinitionException {
+		super(move, gamer, parent);
+		initChilds();
+	}
+
+	/**
+	 * Replaces a leaf with a node
+	 * @param leaf
+	 * @throws MoveDefinitionException
+	 */
+	public TreeNode(TreeLeaf leaf) throws MoveDefinitionException {
+		this(leaf.getMove(),leaf.getGamer(),leaf.getParent());
+	}
+
+	private void initChilds() throws MoveDefinitionException {
 		this.childs = new ArrayList<TreeElement>();
+		MCTSGamer gamer = this.getGamer();
+		List<Move> moves = gamer.getStateMachine().getLegalMoves(gamer.getCurrentState(), gamer.getRole());
+		for (Move move : moves) {
+			this.childs.add(new TreeLeaf(move,gamer,this));
+		}
 	}
 
 	public void addChild(TreeElement child) {

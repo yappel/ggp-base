@@ -1,18 +1,18 @@
 package org.ggp.base.player.gamer.statemachine.MCTS;
 
 import org.ggp.base.util.statemachine.Move;
+import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
 
 public class TreeLeaf extends TreeElement {
 
-	public TreeLeaf(Move move) {
-		super(move);
+	public TreeLeaf(Move move, MCTSGamer gamer, TreeNode parent) {
+		super(move,gamer,parent);
 	}
 
 
-	public TreeNode Extend() {
+	public TreeNode Extend() throws MoveDefinitionException {
 		this.getParent().removeChild(this);
-		TreeNode newNode = new TreeNode(this.getMove());
-		this.getParent().addChild(newNode);
+		TreeNode newNode = new TreeNode(this);
 		return newNode;
 	}
 
