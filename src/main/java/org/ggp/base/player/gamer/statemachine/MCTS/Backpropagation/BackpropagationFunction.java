@@ -1,6 +1,6 @@
 package org.ggp.base.player.gamer.statemachine.MCTS.Backpropagation;
 
-import org.ggp.base.player.gamer.statemachine.MCTS.TreeElement;
+import org.ggp.base.player.gamer.statemachine.MCTS.MCTSNode;
 
 /**
  * Interface for implementing backpropagation step in Monte Carlo Tree Search.
@@ -14,6 +14,6 @@ public interface BackpropagationFunction {
      * @param element The element to start updating from
      * @param score The score from the playout
      */
-    void updateScore(TreeElement element, int score);
+    void updateScore(MCTSNode element, int score);
 
 }
