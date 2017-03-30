@@ -94,8 +94,16 @@ public class MCTSNode {
         return this.score;
     }
 
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     public int getVisits() {
         return this.visits;
+    }
+
+    public void setVisits(int visits) {
+        this.visits = visits;
     }
 
     public boolean isLeafNode() {
