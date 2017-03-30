@@ -82,8 +82,7 @@ public class MCTSGamer extends StateMachineGamer {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "MonteCarloTreeSearchGamer";
 	}
 
 }
