@@ -1,6 +1,7 @@
 package org.ggp.base.player.gamer.statemachine.MCTS;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.ggp.base.util.statemachine.Move;
 
@@ -30,21 +31,20 @@ public class TreeNode extends TreeElement {
 		if (this.getParent() != null) this.getParent().AddResult(win);
 	}
 
+	@Override
 	public double GetScore() {
 		return (double)this.wins/(double)this.totalPlays;
 	}
 
-	/***
-	 * TODO change selection here
-	 * @return
-	 */
-	private TreeElement selectChild() {
-		return this.childs.get(0);
-	}
-
 	@Override
 	public TreeNode Select() {
-		return this.selectChild().Select();
+		Collections.shuffle(this.childs);
+		for (TreeElement child : childs) {
+			if (child instanceof TreeLeaf) {
+				return child.Select();
+			}
+		}
+		return this.childs.get(0).Select();
 	}
 
 	public boolean ExtendAndSimulate() {

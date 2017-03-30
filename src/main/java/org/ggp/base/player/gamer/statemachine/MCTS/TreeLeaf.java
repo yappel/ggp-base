@@ -21,5 +21,4 @@ public class TreeLeaf extends TreeElement {
 		//This will most likely never get called
 		return 1f/this.getParent().getChilds().size();
 	}
-
 }
