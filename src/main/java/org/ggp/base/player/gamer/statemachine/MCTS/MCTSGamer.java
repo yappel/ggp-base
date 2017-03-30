@@ -1,7 +1,5 @@
 package org.ggp.base.player.gamer.statemachine.MCTS;
 
-import java.util.List;
-
 import org.ggp.base.player.gamer.exception.GamePreviewException;
 import org.ggp.base.player.gamer.statemachine.StateMachineGamer;
 import org.ggp.base.util.game.Game;
@@ -32,14 +30,10 @@ public class MCTSGamer extends StateMachineGamer {
 		StateMachine theMachine = getStateMachine();
         long start = System.currentTimeMillis();
         long finishBy = timeout - 1000;
-        TreeNode currentNode = new TreeNode(null);
+        TreeNode rootNode = new TreeNode(null,this,null);
 
-        List<Move> moves = theMachine.getLegalMoves(getCurrentState(), getRole());
-        for (Move move: moves) {
-        	currentNode.addChild(new TreeNode(move,this,null));
-        }
         while(System.currentTimeMillis() < finishBy) {
-        	TreeLeaf selectedLeaf = currentNode.Select();
+        	TreeLeaf selectedLeaf = rootNode.Select();
         	TreeNode selectedNode = selectedLeaf.Extend();
         	boolean simResultedInWin = selectedNode.Simulate();
         	selectedNode.AddResult(simResultedInWin);
@@ -47,7 +41,7 @@ public class MCTSGamer extends StateMachineGamer {
 
         //It's OK to have a favorite child here
         TreeElement mostPromisingChild = null;
-        for (TreeElement child : currentNode.getChilds()) {
+        for (TreeElement child : rootNode.getChilds()) {
         	if (mostPromisingChild == null || mostPromisingChild.GetScore() < child.GetScore()) {
         		mostPromisingChild = child;
         	}
