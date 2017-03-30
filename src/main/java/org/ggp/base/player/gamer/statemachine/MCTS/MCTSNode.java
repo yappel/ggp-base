@@ -4,7 +4,9 @@ import org.ggp.base.util.statemachine.MachineState;
 import org.ggp.base.util.statemachine.Move;
 import org.ggp.base.util.statemachine.Role;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Remco de Vos on 30/03/2017.
@@ -25,18 +27,28 @@ public class MCTSNode {
      * The move made to get in this node.
      */
     private final Move move;
+
+    /**
+     * The joint moves made by all player to get in this node.
+     */
+    private final List<Move> jointMoves;
+
     private final MCTSNode parent;
     private final MCTSGamer gamer;
-    // TODO: could this be final?
-    private List<MCTSNode> children;
+    // TODO: remove old
+    private List<MCTSNode> children2;
+
+    private Map<Move, List<MCTSNode>> children;
 
     private int score = 0;
     private int visits = 0;
 
-    public MCTSNode(MachineState state, Role role, Move move, MCTSNode parent, MCTSGamer gamer) {
+    // TODO: see which of the variables are actually used / needed
+    public MCTSNode(MachineState state, Role role, Move move, List<Move> jointMoves, MCTSNode parent, MCTSGamer gamer) {
         this.state = state;
         this.role = role;
         this.move = move;
+        this.jointMoves = jointMoves;
         this.parent = parent;
         this.gamer = gamer;
     }
@@ -53,6 +65,10 @@ public class MCTSNode {
         return this.move;
     }
 
+    public List<Move> getJointMoves() {
+        return this.jointMoves;
+    }
+
     public MCTSNode getParent() {
         return this.parent;
     }
@@ -62,11 +78,12 @@ public class MCTSNode {
     }
 
     public List<MCTSNode> getChildren() {
-        return this.children;
-    }
-
-    public void setChildren(List<MCTSNode> children) {
-        this.children = children;
+        // TODO: optimize or change to return the HashMap
+        List<MCTSNode> res = new ArrayList<MCTSNode>();
+        for(List<MCTSNode> nodes : this.children.values()) {
+            res.addAll(nodes);
+        }
+        return res;
     }
 
     public int getScore() {
