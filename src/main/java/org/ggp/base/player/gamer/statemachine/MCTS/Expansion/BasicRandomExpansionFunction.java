@@ -34,30 +34,35 @@ public class BasicRandomExpansionFunction implements ExpansionFunction {
         // Check if the current state is terminal
         if(gamer.getStateMachine().isTerminal(leaf.getMachineState())) {
             return leaf;
+        }
+        // When a leaf has not yet been visited choose the leaf
+        if (leaf.getVisits() <= 0) {
+            return leaf;
         } else {
-            Map<Move, List<MCTSNode>> children = new HashMap<Move, List<MCTSNode>>();
-            final StateMachine stateMachine = gamer.getStateMachine();
-            final int roleIndex = stateMachine.getRoleIndices().get(gamer.getRole());
-            // Get all the legal joint moves from the MachineState in the leaf
-            for (List<Move> moves : stateMachine.getLegalJointMoves(leaf.getMachineState())) {
-                // Get the move performed by the algorithm and the resulting state of the joined moves
-                Move move = moves.get(roleIndex);
-                MachineState state = stateMachine.getNextState(leaf.getMachineState(), moves);
-                // If there is no key for the move init a list
-                if (!children.containsKey(move)) {
-                    children.put(move, new ArrayList<MCTSNode>());
+                Map<Move, List<MCTSNode>> children = new HashMap<Move, List<MCTSNode>>();
+                final StateMachine stateMachine = gamer.getStateMachine();
+                final int roleIndex = stateMachine.getRoleIndices().get(gamer.getRole());
+                // Get all the legal joint moves from the MachineState in the leaf
+                for (List<Move> moves : stateMachine.getLegalJointMoves(leaf.getMachineState())) {
+                    // Get the move performed by the algorithm and the resulting state of the joined moves
+                    Move move = moves.get(roleIndex);
+                    MachineState state = stateMachine.getNextState(leaf.getMachineState(), moves);
+                    // If there is no key for the move init a list
+                    if (!children.containsKey(move)) {
+                        children.put(move, new ArrayList<MCTSNode>());
+                    }
+                    // TODO: remove role as it has no purpose?
+                    // Add the new tree node to the Map of children
+                    children.get(move).add(new MCTSNode(state, leaf.getRole(), move, moves, leaf, gamer));
                 }
-                // TODO: remove role as it has no purpose?
-                // Add the new tree node to the Map of children
-                children.get(move).add(new MCTSNode(state, leaf.getRole(), move, moves, leaf, gamer));
+                // Add the children to the leaf
+                leaf.setChildren(children);
+                // TODO: is the way of selecting a random child correct?
+                // Choose a random element to expand
+                List<Move> keys = new ArrayList<Move>(children.keySet());
+                List<MCTSNode> nodes = children.get(keys.get(random.nextInt(keys.size())));
+                return nodes.get(random.nextInt(nodes.size()));
             }
-            // Add the children to the leaf
-            leaf.setChildren(children);
-            // TODO: is the way of selecting a random child correct?
-            // Choose a random element to expand
-            List<Move> keys = new ArrayList<Move>(children.keySet());
-            List<MCTSNode> nodes = children.get(keys.get(random.nextInt(keys.size())));
-            return nodes.get(random.nextInt(nodes.size()));
         }
     }
 }
