@@ -1,8 +1,9 @@
 package org.ggp.base.player.gamer.statemachine.MCTS;
 
+import org.ggp.base.util.statemachine.MachineState;
 import org.ggp.base.util.statemachine.Move;
+import org.ggp.base.util.statemachine.Role;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,19 +11,31 @@ import java.util.List;
  */
 public class MCTSNode {
 
+    private final MachineState state;
+    private final Role role;
     private final Move move;
     private final MCTSNode parent;
     private final MCTSGamer gamer;
     // TODO: could this be final?
-    private ArrayList<MCTSNode> children;
+    private List<MCTSNode> children;
 
     private int score = 0;
     private int visits = 0;
 
-    public MCTSNode(Move move, MCTSNode parent, MCTSGamer gamer) {
+    public MCTSNode(MachineState state, Role role, Move move, MCTSNode parent, MCTSGamer gamer) {
+        this.state = state;
+        this.role = role;
         this.move = move;
         this.parent = parent;
         this.gamer = gamer;
+    }
+
+    public MachineState getMachineState() {
+        return this.state;
+    }
+
+    public Role getRole() {
+        return this.role;
     }
 
     public Move getMove() {
@@ -39,6 +52,10 @@ public class MCTSNode {
 
     public List<MCTSNode> getChildren() {
         return this.children;
+    }
+
+    public void setChildren(List<MCTSNode> children) {
+        this.children = children;
     }
 
     public int getScore() {
