@@ -1,7 +1,7 @@
 package org.ggp.base.player.gamer.statemachine.MCTS.Simulation;
 
 import org.ggp.base.player.gamer.statemachine.MCTS.MCTSGamer;
-import org.ggp.base.player.gamer.statemachine.MCTS.TreeElement;
+import org.ggp.base.player.gamer.statemachine.MCTS.MCTSNode;
 
 /**
  * Interface for implementing the simulation step in the Monte Carlo Tree Search.
@@ -16,6 +16,6 @@ public interface SimulationFunction {
      * @param gamer The MCTSGamer in the game
      * @return The score obtained during the playout
      */
-    int simulate(TreeElement selectedElement, MCTSGamer gamer);
+    int simulate(MCTSNode selectedElement, MCTSGamer gamer);
 
 }
