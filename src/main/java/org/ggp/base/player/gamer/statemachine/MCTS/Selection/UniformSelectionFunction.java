@@ -26,7 +26,11 @@ public final class UniformSelectionFunction implements SelectionFunction {
     @Override
     public MCTSNode select(List<MCTSNode> children) {
         // TODO: fix the problem that children could have 0 elements
-        // TODO: actually implement that it will continue till a leaf has been reached
-        return children.get(random.nextInt(children.size()));
+        MCTSNode selected = children.get(random.nextInt(children.size()));
+        while(!selected.isLeafNode()) {
+            List<MCTSNode> selectedChildren = selected.getChildren();
+            selected = selectedChildren.get(random.nextInt(selectedChildren.size()));
+        }
+        return selected;
     }
 }

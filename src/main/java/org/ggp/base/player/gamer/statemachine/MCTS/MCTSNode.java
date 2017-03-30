@@ -49,4 +49,8 @@ public class MCTSNode {
         return this.visits;
     }
 
+    public boolean isLeafNode() {
+        return this.children == null;
+    }
+
 }
