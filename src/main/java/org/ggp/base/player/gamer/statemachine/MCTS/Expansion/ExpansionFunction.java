@@ -1,6 +1,6 @@
 package org.ggp.base.player.gamer.statemachine.MCTS.Expansion;
 
-import org.ggp.base.player.gamer.statemachine.MCTS.TreeElement;
+import org.ggp.base.player.gamer.statemachine.MCTS.MCTSNode;
 
 /**
  * Interface for implementing the expansion step in Monte Carlo Tree Search.
@@ -14,6 +14,6 @@ public interface ExpansionFunction {
      * @param leaf The leaf element to expand
      * @return The selected child node
      */
-    TreeElement expand(TreeElement leaf);
+    MCTSNode expand(MCTSNode leaf);
 
 }
