@@ -1,5 +1,6 @@
 package org.ggp.base.player.gamer.statemachine.MCTS.Selection;
 
+import org.ggp.base.player.gamer.statemachine.MCTS.MCTSNode;
 import org.ggp.base.player.gamer.statemachine.MCTS.TreeElement;
 
 import java.util.List;
@@ -23,8 +24,9 @@ public final class UniformSelectionFunction implements SelectionFunction {
     }
 
     @Override
-    public TreeElement select(List<TreeElement> children) {
+    public MCTSNode select(List<MCTSNode> children) {
         // TODO: fix the problem that children could have 0 elements
+        // TODO: actually implement that it will continue till a leaf has been reached
         return children.get(random.nextInt(children.size()));
     }
 }
