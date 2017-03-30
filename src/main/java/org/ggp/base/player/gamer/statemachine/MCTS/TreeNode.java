@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.ggp.base.util.statemachine.MachineState;
 import org.ggp.base.util.statemachine.Move;
+import org.ggp.base.util.statemachine.exceptions.GoalDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
+import org.ggp.base.util.statemachine.exceptions.TransitionDefinitionException;
 
 public class TreeNode extends TreeElement {
 
@@ -71,9 +74,12 @@ public class TreeNode extends TreeElement {
 		return chosenChild.Select();
 	}
 
-	public boolean Simulate() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean Simulate() throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException {
+		MCTSGamer gamer = this.getGamer();
+		MachineState finalState = gamer.getStateMachine().performDepthCharge(gamer.getCurrentState(), new int[1]);
+		boolean result = gamer.getStateMachine().getGoal(finalState, gamer.getRole()) == 100;
+		System.out.println("Did we win? " + result);
+		return result;
 	}
 
 	public ArrayList<TreeElement> getChilds() {
