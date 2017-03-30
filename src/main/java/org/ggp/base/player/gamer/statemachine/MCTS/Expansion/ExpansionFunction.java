@@ -3,6 +3,7 @@ package org.ggp.base.player.gamer.statemachine.MCTS.Expansion;
 import org.ggp.base.player.gamer.statemachine.MCTS.MCTSGamer;
 import org.ggp.base.player.gamer.statemachine.MCTS.MCTSNode;
 import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
+import org.ggp.base.util.statemachine.exceptions.TransitionDefinitionException;
 
 /**
  * Interface for implementing the expansion step in Monte Carlo Tree Search.
@@ -17,6 +18,6 @@ public interface ExpansionFunction {
      * @param gamer The active MCTS gamer
      * @return The selected child node
      */
-    MCTSNode expand(MCTSNode leaf, MCTSGamer gamer) throws MoveDefinitionException;
+    MCTSNode expand(MCTSNode leaf, MCTSGamer gamer) throws MoveDefinitionException, TransitionDefinitionException;
 
 }

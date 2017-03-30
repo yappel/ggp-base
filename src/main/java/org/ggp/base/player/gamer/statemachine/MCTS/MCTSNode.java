@@ -86,6 +86,10 @@ public class MCTSNode {
         return res;
     }
 
+    public void setChildren(Map<Move, List<MCTSNode>> children) {
+        this.children = children;
+    }
+
     public int getScore() {
         return this.score;
     }
