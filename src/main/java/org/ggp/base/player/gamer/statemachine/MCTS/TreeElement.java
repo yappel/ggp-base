@@ -11,9 +11,6 @@ public abstract class TreeElement {
 		this.setParent(null);
 	}
 
-	public abstract TreeNode Select();
-
-
 	public Move getMove() {
 		return move;
 	}

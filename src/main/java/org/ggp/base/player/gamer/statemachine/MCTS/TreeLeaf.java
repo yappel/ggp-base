@@ -8,8 +8,8 @@ public class TreeLeaf extends TreeElement {
 		super(move);
 	}
 
-	@Override
-	public TreeNode Select() {
+
+	public TreeNode Extend() {
 		this.getParent().removeChild(this);
 		TreeNode newNode = new TreeNode(this.getMove());
 		this.getParent().addChild(newNode);

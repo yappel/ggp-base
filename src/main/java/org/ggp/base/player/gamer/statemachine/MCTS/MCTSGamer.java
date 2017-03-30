@@ -42,8 +42,9 @@ public class MCTSGamer extends StateMachineGamer {
         	currentNode.addChild(new TreeNode(move));
         }
         while(System.currentTimeMillis() < finishBy) {
-        	TreeNode selectedNode = this.currentNode.Select();
-        	boolean simResultedInWin = selectedNode.ExtendAndSimulate();
+        	TreeLeaf selectedLeaf = this.currentNode.Select();
+        	TreeNode selectedNode = selectedLeaf.Extend();
+        	boolean simResultedInWin = selectedNode.Simulate();
         	selectedNode.AddResult(simResultedInWin);
         }
 

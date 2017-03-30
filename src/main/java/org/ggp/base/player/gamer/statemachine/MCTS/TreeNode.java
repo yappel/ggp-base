@@ -36,18 +36,18 @@ public class TreeNode extends TreeElement {
 		return (double)this.wins/(double)this.totalPlays;
 	}
 
-	@Override
-	public TreeNode Select() {
+	public TreeLeaf Select() {
 		Collections.shuffle(this.childs);
 		for (TreeElement child : childs) {
 			if (child instanceof TreeLeaf) {
-				return child.Select();
+				return (TreeLeaf) child;
 			}
 		}
-		return this.childs.get(0).Select();
+		TreeNode chosenChild = (TreeNode) this.childs.get(0);
+		return chosenChild.Select();
 	}
 
-	public boolean ExtendAndSimulate() {
+	public boolean Simulate() {
 		// TODO Auto-generated method stub
 		return false;
 	}
