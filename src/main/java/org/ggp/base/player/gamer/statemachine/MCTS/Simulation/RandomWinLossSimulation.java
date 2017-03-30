@@ -1,6 +1,7 @@
 package org.ggp.base.player.gamer.statemachine.MCTS.Simulation;
 
 import org.ggp.base.player.gamer.statemachine.MCTS.MCTSGamer;
+import org.ggp.base.player.gamer.statemachine.MCTS.MCTSNode;
 import org.ggp.base.player.gamer.statemachine.MCTS.TreeElement;
 
 import java.util.Random;
@@ -24,7 +25,7 @@ public class RandomWinLossSimulation implements SimulationFunction {
     }
 
     @Override
-    public int simulate(TreeElement selectedElement, MCTSGamer gamer) {
+    public int simulate(MCTSNode selectedElement, MCTSGamer gamer) {
         // TODO: actually implement
         return 0;
     }
