@@ -1,7 +1,6 @@
 package org.ggp.base.player.gamer.statemachine.MCTS.Selection;
 
 import org.ggp.base.player.gamer.statemachine.MCTS.MCTSNode;
-import org.ggp.base.player.gamer.statemachine.MCTS.TreeElement;
 
 import java.util.List;
 import java.util.Random;
@@ -24,9 +23,8 @@ public final class UniformSelectionFunction implements SelectionFunction {
     }
 
     @Override
-    public MCTSNode select(List<MCTSNode> children) {
-        // TODO: fix the problem that children could have 0 elements
-        MCTSNode selected = children.get(random.nextInt(children.size()));
+    public MCTSNode select(MCTSNode node) {
+        MCTSNode selected = node;
         while(!selected.isLeafNode()) {
             List<MCTSNode> selectedChildren = selected.getChildren();
             selected = selectedChildren.get(random.nextInt(selectedChildren.size()));
