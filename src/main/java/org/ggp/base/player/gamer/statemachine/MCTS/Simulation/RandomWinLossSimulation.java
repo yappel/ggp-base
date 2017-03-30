@@ -32,7 +32,7 @@ public class RandomWinLossSimulation implements SimulationFunction {
 
     @Override
     public int simulate(MCTSNode selectedElement, MCTSGamer gamer) {
-        StateMachine stateMachine = gamer.getInitialStateMachine();
+        StateMachine stateMachine = gamer.getStateMachine();
         MachineState state = selectedElement.getMachineState();
 
 
