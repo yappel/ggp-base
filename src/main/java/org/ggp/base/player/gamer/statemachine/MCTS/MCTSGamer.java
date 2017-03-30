@@ -51,10 +51,7 @@ public class MCTSGamer extends StateMachineGamer {
         //It's OK to have a favorite child here
         TreeElement mostPromisingChild = null;
         for (TreeElement child : this.currentNode.getChilds()) {
-        	if (mostPromisingChild == null) {
-        		mostPromisingChild = child;
-        	}
-        	if (mostPromisingChild.GetScore() < child.GetScore()) {
+        	if (mostPromisingChild == null || mostPromisingChild.GetScore() < child.GetScore()) {
         		mostPromisingChild = child;
         	}
         }
