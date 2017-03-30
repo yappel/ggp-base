@@ -11,8 +11,19 @@ import java.util.List;
  */
 public class MCTSNode {
 
+    /**
+     * The state of the game in this node.
+     */
     private final MachineState state;
+
+    /**
+     * The player in the current node.
+     */
     private final Role role;
+
+    /**
+     * The move made to get in this node.
+     */
     private final Move move;
     private final MCTSNode parent;
     private final MCTSGamer gamer;
