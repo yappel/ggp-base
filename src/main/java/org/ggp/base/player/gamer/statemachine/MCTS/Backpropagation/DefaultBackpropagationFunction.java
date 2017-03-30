@@ -10,9 +10,9 @@ public class DefaultBackpropagationFunction implements BackpropagationFunction{
     @Override
     public void updateScore(MCTSNode element, int score) {
         MCTSNode node = element;
-        while (element != null) {
-            element.setScore(element.getScore() + score);
-            element.setVisits(element.getVisits() + 1);
+        while (node != null) {
+            node.setScore(node.getScore() + score);
+            node.setVisits(node.getVisits() + 1);
             node = node.getParent();
         }
     }
