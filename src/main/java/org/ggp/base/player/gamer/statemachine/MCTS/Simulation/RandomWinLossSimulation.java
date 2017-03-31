@@ -48,8 +48,7 @@ public class RandomWinLossSimulation implements SimulationFunction {
         try {
             return stateMachine.getGoal(state,gamer.getRole());
         } catch (GoalDefinitionException e) {
-            e.printStackTrace();
+            return 0;
         }
-        return -1;
     }
 }

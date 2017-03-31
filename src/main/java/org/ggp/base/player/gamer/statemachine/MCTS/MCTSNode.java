@@ -33,7 +33,7 @@ public class MCTSNode {
      */
     private final List<Move> jointMoves;
 
-    private final MCTSNode parent;
+    private MCTSNode parent;
     private final MCTSGamer gamer;
     // TODO: remove old
     private List<MCTSNode> children2;
@@ -71,6 +71,10 @@ public class MCTSNode {
 
     public MCTSNode getParent() {
         return this.parent;
+    }
+
+    public void setParent(MCTSNode parent) {
+        this.parent = parent;
     }
 
     public MCTSGamer getGamer() {
