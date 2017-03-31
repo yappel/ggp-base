@@ -1,8 +1,7 @@
 package org.ggp.base.player.gamer.statemachine.MCTS.Simulation;
 
-import org.ggp.base.player.gamer.statemachine.MCTS.MCTSGamer;
+import org.ggp.base.player.gamer.statemachine.MCTS.Configurations.MCTSGamer;
 import org.ggp.base.player.gamer.statemachine.MCTS.MCTSNode;
-import org.ggp.base.player.gamer.statemachine.MCTS.TreeElement;
 import org.ggp.base.util.statemachine.MachineState;
 import org.ggp.base.util.statemachine.StateMachine;
 import org.ggp.base.util.statemachine.exceptions.GoalDefinitionException;

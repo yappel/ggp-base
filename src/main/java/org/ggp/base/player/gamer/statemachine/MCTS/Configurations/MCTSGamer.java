@@ -1,14 +1,12 @@
-package org.ggp.base.player.gamer.statemachine.MCTS;
+package org.ggp.base.player.gamer.statemachine.MCTS.Configurations;
 
 import org.ggp.base.player.gamer.event.GamerSelectedMoveEvent;
 import org.ggp.base.player.gamer.exception.GamePreviewException;
 import org.ggp.base.player.gamer.statemachine.MCTS.Backpropagation.BackpropagationFunction;
-import org.ggp.base.player.gamer.statemachine.MCTS.Backpropagation.DefaultBackpropagationFunction;
-import org.ggp.base.player.gamer.statemachine.MCTS.Expansion.BasicRandomExpansionFunction;
 import org.ggp.base.player.gamer.statemachine.MCTS.Expansion.ExpansionFunction;
+import org.ggp.base.player.gamer.statemachine.MCTS.MCTSNode;
+import org.ggp.base.player.gamer.statemachine.MCTS.MoveSelection.MoveSelectionFunction;
 import org.ggp.base.player.gamer.statemachine.MCTS.Selection.SelectionFunction;
-import org.ggp.base.player.gamer.statemachine.MCTS.Selection.UniformSelectionFunction;
-import org.ggp.base.player.gamer.statemachine.MCTS.Simulation.RandomWinLossSimulation;
 import org.ggp.base.player.gamer.statemachine.MCTS.Simulation.SimulationFunction;
 import org.ggp.base.player.gamer.statemachine.StateMachineGamer;
 import org.ggp.base.util.game.Game;
@@ -21,32 +19,32 @@ import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.TransitionDefinitionException;
 import org.ggp.base.util.statemachine.implementation.prover.ProverStateMachine;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-public class MCTSGamer extends StateMachineGamer {
+public abstract class MCTSGamer extends StateMachineGamer {
 
 	private final SelectionFunction selectionFunction;
 	private final ExpansionFunction expansionFunction;
 	private final SimulationFunction simulationFunction;
 	private final BackpropagationFunction backpropagationFunction;
-	private final Random random;
-	private MCTSNode root;
+	private final MoveSelectionFunction moveSelectionFunction;
+    private MCTSNode root;
 
 	public MCTSGamer() {
 		super();
-		this.random = new Random();
-		this.selectionFunction = new UniformSelectionFunction(this.random);
-		this.expansionFunction = new BasicRandomExpansionFunction(this.random);
-		this.simulationFunction = new RandomWinLossSimulation(this.random);
-		this.backpropagationFunction = new DefaultBackpropagationFunction();
+		this.selectionFunction = getSelectionFunction();
+		this.expansionFunction = getExpansionFunction();
+		this.simulationFunction = getSimulationFunction();
+		this.backpropagationFunction = getBackpropagationFunction();
+        this.moveSelectionFunction = getMoveSelectionFunction();
         GamerLogger.setFileToDisplay("StateMachine");
         GamerLogger.setFileToDisplay("ExecutiveSummary");
         GamerLogger.setFileToDisplay("Proxy");
 
 	}
-
+    public abstract SelectionFunction getSelectionFunction();
+    public abstract ExpansionFunction getExpansionFunction();
+    public abstract SimulationFunction getSimulationFunction();
+    public abstract BackpropagationFunction getBackpropagationFunction();
+    public abstract MoveSelectionFunction getMoveSelectionFunction();
 
 	@Override
 	public StateMachine getInitialStateMachine() {
@@ -84,69 +82,29 @@ public class MCTSGamer extends StateMachineGamer {
         long start = System.currentTimeMillis();
 
         stateMachineMetaGame(timeout);
+
         System.out.println("Simulations: " + root.getVisits());
-        System.out.println("Nodes: " + countNodes(root));
+        System.out.println("Nodes: " + root.countNodes());
 
-        Map<Move, List<MCTSNode>> children = root.getChildrenMap();
-        Move bestMove = null;
-        double scoreRatio = 0;
-
-        for(Move move : children.keySet()) {
-        	List<MCTSNode> nodes = children.get(move);
-        	int totalVisits = 0;
-        	int totalScore = 0;
-        	for(MCTSNode node : nodes) {
-        		totalVisits += node.getVisits();
-        		totalScore += node.getScore();
-			}
-			double ratio = (double) totalScore / (double) totalVisits;
-        	if (ratio > scoreRatio) {
-        		scoreRatio = ratio;
-        		bestMove = move;
-			}
-		}
-
+        Move move = moveSelectionFunction.selectMove(root);
 
         long stop = System.currentTimeMillis();
-        notifyObservers(new GamerSelectedMoveEvent(getStateMachine().getLegalMoves(getCurrentState(), getRole()), bestMove, stop - start));
-        return bestMove;
+        notifyObservers(new GamerSelectedMoveEvent(getStateMachine().getLegalMoves(getCurrentState(), getRole()), move, stop - start));
+        return move;
 	}
 
 	@Override
 	public void stateMachineStop() {
-		// TODO Auto-generated method stub
         root = null;
 	}
 
 	@Override
 	public void stateMachineAbort() {
-		// TODO Auto-generated method stub
         root = null;
 	}
 
 	@Override
 	public void preview(Game g, long timeout) throws GamePreviewException {
 		// TODO Auto-generated method stub
-
 	}
-
-	@Override
-	public String getName() {
-		return "MonteCarloTreeSearchGamer";
-	}
-
-    public int countNodes(MCTSNode node) {
-        if (node.getVisits() == 0){
-            return 0;
-        }
-        if (node.getChildrenMap() == null){
-            return 1;
-        }
-        int nodes = 0;
-        for (MCTSNode n : node.getChildren()) {
-            nodes += countNodes(n);
-        }
-        return nodes + 1;
-    }
-
 }

@@ -1,6 +1,6 @@
 package org.ggp.base.player.gamer.statemachine.MCTS.Expansion;
 
-import org.ggp.base.player.gamer.statemachine.MCTS.MCTSGamer;
+import org.ggp.base.player.gamer.statemachine.MCTS.Configurations.MCTSGamer;
 import org.ggp.base.player.gamer.statemachine.MCTS.MCTSNode;
 
 import org.ggp.base.util.statemachine.MachineState;

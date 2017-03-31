@@ -1,5 +1,6 @@
 package org.ggp.base.player.gamer.statemachine.MCTS;
 
+import org.ggp.base.player.gamer.statemachine.MCTS.Configurations.MCTSGamer;
 import org.ggp.base.util.statemachine.MachineState;
 import org.ggp.base.util.statemachine.Move;
 import org.ggp.base.util.statemachine.Role;
@@ -83,7 +84,7 @@ public class MCTSNode {
 
     public List<MCTSNode> getChildren() {
         // TODO: optimize or change to return the HashMap
-        List<MCTSNode> res = new ArrayList<MCTSNode>();
+        List<MCTSNode> res = new ArrayList<>();
         for(List<MCTSNode> nodes : this.children.values()) {
             res.addAll(nodes);
         }
@@ -117,6 +118,20 @@ public class MCTSNode {
 
     public boolean isLeafNode() {
         return this.children == null;
+    }
+
+    public int countNodes() {
+        if (this.visits == 0){
+            return 0;
+        }
+        if (this.children == null){
+            return 1;
+        }
+        int nodes = 0;
+        for (MCTSNode child : getChildren()) {
+            nodes += child.countNodes();
+        }
+        return nodes + 1;
     }
 
 }
