@@ -28,28 +28,19 @@ public class DefaultMCTSGamer extends MCTSGamer{
     	super(searchLight);
     }
 
-	private Random random;
-
-    private Random getRandom() {
-        if (this.random == null) {
-            random = new Random();
-        }
-        return random;
-    }
-
     @Override
     public SelectionFunction getSelectionFunction() {
-        return new UniformSelectionFunction(getRandom());
+        return new UniformSelectionFunction(this.random);
     }
 
     @Override
     public ExpansionFunction getExpansionFunction() {
-        return new BasicRandomExpansionFunction(getRandom());
+        return new BasicRandomExpansionFunction(this.random);
     }
 
     @Override
     public SimulationFunction getSimulationFunction() {
-        return new RandomWinLossSimulation(getRandom());
+        return new RandomWinLossSimulation(this.random);
     }
 
     @Override

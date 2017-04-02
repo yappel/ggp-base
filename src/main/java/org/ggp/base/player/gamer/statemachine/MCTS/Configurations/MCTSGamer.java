@@ -2,6 +2,7 @@ package org.ggp.base.player.gamer.statemachine.MCTS.Configurations;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.ggp.base.player.gamer.event.GamerSelectedMoveEvent;
 import org.ggp.base.player.gamer.exception.GamePreviewException;
@@ -34,6 +35,8 @@ public abstract class MCTSGamer extends StateMachineGamer {
     private MCTSNode root;
     private boolean useSearchLight;
 
+    protected final Random random;
+
 	public MCTSGamer(boolean useSearchLight) {
 		super();
 		this.selectionFunction = getSelectionFunction();
@@ -46,7 +49,9 @@ public abstract class MCTSGamer extends StateMachineGamer {
         GamerLogger.setFileToDisplay("Proxy");
         GamerLogger.setFileToDisplay("SearchLight");
         this.useSearchLight = useSearchLight;
+        this.random = new Random();
     }
+
     public abstract SelectionFunction getSelectionFunction();
     public abstract ExpansionFunction getExpansionFunction();
     public abstract SimulationFunction getSimulationFunction();
