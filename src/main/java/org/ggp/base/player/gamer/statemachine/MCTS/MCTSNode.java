@@ -1,5 +1,10 @@
 package org.ggp.base.player.gamer.statemachine.MCTS;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.ggp.base.player.gamer.statemachine.MCTS.Configurations.MCTSGamer;
 import org.ggp.base.util.statemachine.MachineState;
 import org.ggp.base.util.statemachine.Move;
@@ -7,11 +12,6 @@ import org.ggp.base.util.statemachine.Role;
 import org.ggp.base.util.statemachine.StateMachine;
 import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.TransitionDefinitionException;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Remco de Vos on 30/03/2017.
@@ -148,7 +148,7 @@ public class MCTSNode {
             MachineState state = stateMachine.getNextState(getMachineState(), moves);
             // If there is no key for the move init a list
             if (!children.containsKey(move)) {
-                children.put(move, new ArrayList<>());
+                children.put(move, new ArrayList<MCTSNode>());
             }
             // TODO: remove role as it has no purpose?
             // Add the new tree node to the Map of children
