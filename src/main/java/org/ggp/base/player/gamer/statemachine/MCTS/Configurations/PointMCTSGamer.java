@@ -1,7 +1,7 @@
 package org.ggp.base.player.gamer.statemachine.MCTS.Configurations;
 
-import org.ggp.base.player.gamer.statemachine.MCTS.Selection.BasicSelectionFunction;
-import org.ggp.base.player.gamer.statemachine.MCTS.Selection.SelectionFunction;
+import org.ggp.base.player.gamer.statemachine.MCTS.Simulation.RandomDepthSimulation;
+import org.ggp.base.player.gamer.statemachine.MCTS.Simulation.SimulationFunction;
 
 /**
  * MCTS Gamer configuration which does not explore the game till a terminal state but to a certain depth and basis its
@@ -16,8 +16,8 @@ public class PointMCTSGamer extends DefaultMCTSGamer {
     }
 
     @Override
-    public SelectionFunction getSelectionFunction() {
-        return new BasicSelectionFunction();
+    public SimulationFunction getSimulationFunction() {
+        return new RandomDepthSimulation();
     }
 
     @Override
