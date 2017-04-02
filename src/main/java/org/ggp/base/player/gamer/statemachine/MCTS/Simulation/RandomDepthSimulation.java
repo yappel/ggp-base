@@ -24,7 +24,7 @@ public class RandomDepthSimulation implements SimulationFunction {
     private static final int DEFAULT_DEPTH = 5;
 
     public RandomDepthSimulation() {
-        this(new Random(), this.DEFAULT_DEPTH);
+        this(new Random(), DEFAULT_DEPTH);
     }
 
     public RandomDepthSimulation(Random random, int maximumDepth) {
