@@ -22,8 +22,11 @@ public class UctMCTSGamer extends MCTSGamer {
 
     public UctMCTSGamer() {
 		super(false);
-		// TODO Auto-generated constructor stub
 	}
+
+    public UctMCTSGamer(boolean searchLight) {
+    	super(searchLight);
+    }
 
 	private Random random;
 
