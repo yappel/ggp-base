@@ -1,5 +1,7 @@
 package org.ggp.base.player.gamer.statemachine.MCTS.Configurations;
 
+import org.ggp.base.player.gamer.statemachine.MCTS.MoveSelection.MaximumMinimumTurnBasedMoveSelection;
+import org.ggp.base.player.gamer.statemachine.MCTS.MoveSelection.MoveSelectionFunction;
 import org.ggp.base.player.gamer.statemachine.MCTS.Simulation.RandomDepthSimulation;
 import org.ggp.base.player.gamer.statemachine.MCTS.Simulation.SimulationFunction;
 
@@ -18,6 +20,11 @@ public class PointMCTSGamer extends DefaultMCTSGamer {
     @Override
     public SimulationFunction getSimulationFunction() {
         return new RandomDepthSimulation();
+    }
+
+    @Override
+    public MoveSelectionFunction getMoveSelectionFunction() {
+        return new MaximumMinimumTurnBasedMoveSelection();
     }
 
     @Override
