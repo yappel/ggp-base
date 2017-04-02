@@ -4,3 +4,7 @@
 /.gradle/
 /build/
 /out/
+
+.idea/
+ggp-base.iml
+
