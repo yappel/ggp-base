@@ -24,6 +24,10 @@ public class DefaultMCTSGamer extends MCTSGamer{
 		super(false);
 	}
 
+    public DefaultMCTSGamer(boolean searchLight) {
+    	super(searchLight);
+    }
+
 	private Random random;
 
     private Random getRandom() {
