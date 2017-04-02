@@ -1,14 +1,17 @@
 package org.ggp.base.player.gamer.statemachine.MCTS.Configurations;
 
+import java.util.List;
+import java.util.Map;
+
 import org.ggp.base.player.gamer.event.GamerSelectedMoveEvent;
 import org.ggp.base.player.gamer.exception.GamePreviewException;
+import org.ggp.base.player.gamer.statemachine.StateMachineGamer;
+import org.ggp.base.player.gamer.statemachine.MCTS.MCTSNode;
 import org.ggp.base.player.gamer.statemachine.MCTS.Backpropagation.BackpropagationFunction;
 import org.ggp.base.player.gamer.statemachine.MCTS.Expansion.ExpansionFunction;
-import org.ggp.base.player.gamer.statemachine.MCTS.MCTSNode;
 import org.ggp.base.player.gamer.statemachine.MCTS.MoveSelection.MoveSelectionFunction;
 import org.ggp.base.player.gamer.statemachine.MCTS.Selection.SelectionFunction;
 import org.ggp.base.player.gamer.statemachine.MCTS.Simulation.SimulationFunction;
-import org.ggp.base.player.gamer.statemachine.StateMachineGamer;
 import org.ggp.base.util.game.Game;
 import org.ggp.base.util.logging.GamerLogger;
 import org.ggp.base.util.statemachine.MachineState;
@@ -21,9 +24,6 @@ import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.TransitionDefinitionException;
 import org.ggp.base.util.statemachine.implementation.prover.ProverStateMachine;
 
-import java.util.List;
-import java.util.Map;
-
 public abstract class MCTSGamer extends StateMachineGamer {
 
 	private final SelectionFunction selectionFunction;
@@ -32,8 +32,9 @@ public abstract class MCTSGamer extends StateMachineGamer {
 	private final BackpropagationFunction backpropagationFunction;
 	private final MoveSelectionFunction moveSelectionFunction;
     private MCTSNode root;
+    private boolean useSearchLight;
 
-	public MCTSGamer() {
+	public MCTSGamer(boolean useSearchLight) {
 		super();
 		this.selectionFunction = getSelectionFunction();
 		this.expansionFunction = getExpansionFunction();
@@ -44,6 +45,7 @@ public abstract class MCTSGamer extends StateMachineGamer {
         GamerLogger.setFileToDisplay("ExecutiveSummary");
         GamerLogger.setFileToDisplay("Proxy");
         GamerLogger.setFileToDisplay("SearchLight");
+        this.useSearchLight = useSearchLight;
     }
     public abstract SelectionFunction getSelectionFunction();
     public abstract ExpansionFunction getExpansionFunction();
@@ -80,7 +82,11 @@ public abstract class MCTSGamer extends StateMachineGamer {
 
         setTree();
 
-        Move move = searchLightTurnBased(root, getStateMachine());
+        Move move = null;
+        if(this.useSearchLight) {
+        	move = searchLightTurnBased(root, getStateMachine());
+        }
+
 
         Map<Move, List<MCTSNode>> childrenMap = root.getChildrenMap();
 
@@ -101,7 +107,7 @@ public abstract class MCTSGamer extends StateMachineGamer {
         return move;
 	}
 
-    private Move searchLightTurnBased(MCTSNode root, StateMachine stateMachine) throws TransitionDefinitionException, MoveDefinitionException {
+	private Move searchLightTurnBased(MCTSNode root, StateMachine stateMachine) throws TransitionDefinitionException, MoveDefinitionException {
         System.out.println("SearchLight");
         Map<Move, List<MCTSNode>> children = root.getChildrenMap();
         if (children == null) {
@@ -129,6 +135,7 @@ public abstract class MCTSGamer extends StateMachineGamer {
 
         return null;
     }
+
 
     private boolean checkTerminalGoal(MachineState node, StateMachine stateMachine, Role role, int goalValue) {
         if (stateMachine.isTerminal(node)) {

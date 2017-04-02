@@ -1,5 +1,7 @@
 package org.ggp.base.player.gamer.statemachine.MCTS.Configurations;
 
+import java.util.Random;
+
 import org.ggp.base.player.gamer.statemachine.MCTS.Backpropagation.BackpropagationFunction;
 import org.ggp.base.player.gamer.statemachine.MCTS.Backpropagation.DefaultBackpropagationFunction;
 import org.ggp.base.player.gamer.statemachine.MCTS.Expansion.BasicRandomExpansionFunction;
@@ -11,8 +13,6 @@ import org.ggp.base.player.gamer.statemachine.MCTS.Selection.UctSelectionFunctio
 import org.ggp.base.player.gamer.statemachine.MCTS.Simulation.RandomWinLossSimulation;
 import org.ggp.base.player.gamer.statemachine.MCTS.Simulation.SimulationFunction;
 
-import java.util.Random;
-
 /**
  * Creates a default configuration of the monte carlo tree search algorithm.
  * <p>
@@ -20,7 +20,12 @@ import java.util.Random;
  */
 public class UctMCTSGamer extends MCTSGamer {
 
-    private Random random;
+    public UctMCTSGamer() {
+		super(false);
+		// TODO Auto-generated constructor stub
+	}
+
+	private Random random;
 
     private Random getRandom() {
         if (this.random == null) {
