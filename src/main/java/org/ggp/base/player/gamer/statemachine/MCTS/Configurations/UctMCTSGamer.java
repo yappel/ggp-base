@@ -7,7 +7,7 @@ import org.ggp.base.player.gamer.statemachine.MCTS.Expansion.ExpansionFunction;
 import org.ggp.base.player.gamer.statemachine.MCTS.MoveSelection.MaximumAverageMoveSelection;
 import org.ggp.base.player.gamer.statemachine.MCTS.MoveSelection.MoveSelectionFunction;
 import org.ggp.base.player.gamer.statemachine.MCTS.Selection.SelectionFunction;
-import org.ggp.base.player.gamer.statemachine.MCTS.Selection.UniformSelectionFunction;
+import org.ggp.base.player.gamer.statemachine.MCTS.Selection.UctSelectionFunction;
 import org.ggp.base.player.gamer.statemachine.MCTS.Simulation.RandomWinLossSimulation;
 import org.ggp.base.player.gamer.statemachine.MCTS.Simulation.SimulationFunction;
 
@@ -15,10 +15,10 @@ import java.util.Random;
 
 /**
  * Creates a default configuration of the monte carlo tree search algorithm.
- *
+ * <p>
  * Created by Ben on 31/03/17.
  */
-public class DefaultMCTSGamer extends MCTSGamer{
+public class UctMCTSGamer extends MCTSGamer {
 
     private Random random;
 
@@ -31,7 +31,7 @@ public class DefaultMCTSGamer extends MCTSGamer{
 
     @Override
     public SelectionFunction getSelectionFunction() {
-        return new UniformSelectionFunction(getRandom());
+        return new UctSelectionFunction(getRandom());
     }
 
     @Override
@@ -56,6 +56,6 @@ public class DefaultMCTSGamer extends MCTSGamer{
 
     @Override
     public String getName() {
-        return "Default_MCTS";
+        return "UCT_MCTS";
     }
 }

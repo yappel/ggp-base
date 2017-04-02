@@ -11,13 +11,18 @@ import org.ggp.base.player.gamer.statemachine.MCTS.Simulation.SimulationFunction
 import org.ggp.base.player.gamer.statemachine.StateMachineGamer;
 import org.ggp.base.util.game.Game;
 import org.ggp.base.util.logging.GamerLogger;
+import org.ggp.base.util.statemachine.MachineState;
 import org.ggp.base.util.statemachine.Move;
+import org.ggp.base.util.statemachine.Role;
 import org.ggp.base.util.statemachine.StateMachine;
 import org.ggp.base.util.statemachine.cache.CachedStateMachine;
 import org.ggp.base.util.statemachine.exceptions.GoalDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.TransitionDefinitionException;
 import org.ggp.base.util.statemachine.implementation.prover.ProverStateMachine;
+
+import java.util.List;
+import java.util.Map;
 
 public abstract class MCTSGamer extends StateMachineGamer {
 
@@ -38,8 +43,8 @@ public abstract class MCTSGamer extends StateMachineGamer {
         GamerLogger.setFileToDisplay("StateMachine");
         GamerLogger.setFileToDisplay("ExecutiveSummary");
         GamerLogger.setFileToDisplay("Proxy");
-
-	}
+        GamerLogger.setFileToDisplay("SearchLight");
+    }
     public abstract SelectionFunction getSelectionFunction();
     public abstract ExpansionFunction getExpansionFunction();
     public abstract SimulationFunction getSimulationFunction();
@@ -55,16 +60,8 @@ public abstract class MCTSGamer extends StateMachineGamer {
 	public void stateMachineMetaGame(long timeout)
 			throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException {
         long finishBy = timeout - 1000;
-        if (root == null) {
-            root = new MCTSNode(this.getCurrentState(), this.getRole(), null, null, null, this);
-        } else{
-            for (MCTSNode node: root.getChildren()) {
-                if(node.getMachineState().equals(getCurrentState())) {
-                    root = node;
-                    root.setParent(null);
-                }
-            }
-        }
+
+        setTree();
 
         while(System.currentTimeMillis() < finishBy) {
             MCTSNode selected = this.selectionFunction.select(root);
@@ -81,17 +78,83 @@ public abstract class MCTSGamer extends StateMachineGamer {
 
         long start = System.currentTimeMillis();
 
-        stateMachineMetaGame(timeout);
+        setTree();
 
-        System.out.println("Simulations: " + root.getVisits());
-        System.out.println("Nodes: " + root.countNodes());
+        Move move = searchLightTurnBased(root, getStateMachine());
 
-        Move move = moveSelectionFunction.selectMove(root);
+        Map<Move, List<MCTSNode>> childrenMap = root.getChildrenMap();
+
+        if (childrenMap != null) {
+            System.out.println(childrenMap.keySet());
+        }
+
+        if (childrenMap != null && childrenMap.keySet().size() == 1) {
+            move = root.getChildren().get(0).getMove();
+        } else if (move == null) {
+            stateMachineMetaGame(timeout);
+
+            move = moveSelectionFunction.selectMove(root);
+        }
 
         long stop = System.currentTimeMillis();
         notifyObservers(new GamerSelectedMoveEvent(getStateMachine().getLegalMoves(getCurrentState(), getRole()), move, stop - start));
         return move;
 	}
+
+    private Move searchLightTurnBased(MCTSNode root, StateMachine stateMachine) throws TransitionDefinitionException, MoveDefinitionException {
+        System.out.println("SearchLight");
+        Map<Move, List<MCTSNode>> children = root.getChildrenMap();
+        if (children == null) {
+            root.createChildren();
+            children = root.getChildrenMap();
+        }
+        for (Move move : children.keySet()) {
+            MCTSNode child = children.get(move).get(0);
+// Checking if current move leads to guaranteed win.
+            if (checkTerminalGoal(child.getMachineState(), stateMachine, root.getGamer().getRole(), 100)) {
+                return child.getMove();
+            }
+
+// Checking whether next move contains contains guaranteed lose and removes it from the options.
+            for (MachineState node : stateMachine.getNextStates(child.getMachineState())) {
+                if (checkTerminalGoal(node, stateMachine, root.getGamer().getRole(), 0)) {
+                    if (children.keySet().size() > 1) {
+                        children.remove(move);
+                        System.out.println("Removed:" + move);
+                    }
+                }
+            }
+
+        }
+
+        return null;
+    }
+
+    private boolean checkTerminalGoal(MachineState node, StateMachine stateMachine, Role role, int goalValue) {
+        if (stateMachine.isTerminal(node)) {
+            try {
+                if (stateMachine.getGoal(node, role) == goalValue) {
+                    return true;
+                }
+            } catch (GoalDefinitionException e) {
+                GamerLogger.logError("SearchLight", e.getMessage());
+            }
+        }
+        return false;
+    }
+
+    private void setTree() {
+        if (root == null) {
+            root = new MCTSNode(this.getCurrentState(), this.getRole(), null, null, null, this);
+        } else if (!root.getMachineState().equals(getCurrentState())) {
+            for (MCTSNode node : root.getChildren()) {
+                if (node.getMachineState().equals(getCurrentState())) {
+                    root = node;
+                    root.setParent(null);
+                }
+            }
+        }
+    }
 
 	@Override
 	public void stateMachineStop() {

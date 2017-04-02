@@ -4,10 +4,14 @@ import org.ggp.base.player.gamer.statemachine.MCTS.Configurations.MCTSGamer;
 import org.ggp.base.util.statemachine.MachineState;
 import org.ggp.base.util.statemachine.Move;
 import org.ggp.base.util.statemachine.Role;
+import org.ggp.base.util.statemachine.StateMachine;
+import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
+import org.ggp.base.util.statemachine.exceptions.TransitionDefinitionException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Remco de Vos on 30/03/2017.
@@ -33,9 +37,8 @@ public class MCTSNode {
      * The joint moves made by all player to get in this node.
      */
     private final List<Move> jointMoves;
-
-    private MCTSNode parent;
     private final MCTSGamer gamer;
+    private MCTSNode parent;
     // TODO: remove old
     private List<MCTSNode> children2;
 
@@ -91,13 +94,13 @@ public class MCTSNode {
         return res;
     }
 
+    public void setChildren(Map<Move, List<MCTSNode>> children) {
+        this.children = children;
+    }
+
     // TODO: change this to getChildren?
     public Map<Move, List<MCTSNode>> getChildrenMap() {
         return this.children;
-    }
-
-    public void setChildren(Map<Move, List<MCTSNode>> children) {
-        this.children = children;
     }
 
     public int getScore() {
@@ -132,6 +135,25 @@ public class MCTSNode {
             nodes += child.countNodes();
         }
         return nodes + 1;
+    }
+
+    public void createChildren() throws MoveDefinitionException, TransitionDefinitionException {
+        children = new ConcurrentHashMap<>();
+        final StateMachine stateMachine = getGamer().getStateMachine();
+        final int roleIndex = stateMachine.getRoleIndices().get(getGamer().getRole());
+        // Get all the legal joint moves from the MachineState in the leaf
+        for (List<Move> moves : stateMachine.getLegalJointMoves(getMachineState())) {
+            // Get the move performed by the algorithm and the resulting state of the joined moves
+            Move move = moves.get(roleIndex);
+            MachineState state = stateMachine.getNextState(getMachineState(), moves);
+            // If there is no key for the move init a list
+            if (!children.containsKey(move)) {
+                children.put(move, new ArrayList<>());
+            }
+            // TODO: remove role as it has no purpose?
+            // Add the new tree node to the Map of children
+            children.get(move).add(new MCTSNode(state, getRole(), move, moves, this, getGamer()));
+        }
     }
 
 }

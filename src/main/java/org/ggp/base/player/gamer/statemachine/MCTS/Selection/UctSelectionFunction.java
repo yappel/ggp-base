@@ -1,6 +1,7 @@
 package org.ggp.base.player.gamer.statemachine.MCTS.Selection;
 
 import org.ggp.base.player.gamer.statemachine.MCTS.MCTSNode;
+
 import java.util.Random;
 
 /**
@@ -38,8 +39,8 @@ public class UctSelectionFunction implements SelectionFunction {
             if (child.getVisits() == 0) {
                 return child;
             }
-            double uct = (child.getScore()/child.getVisits())
-                    + Math.sqrt(Math.log(root.getVisits())/child.getVisits());
+            double uct = (child.getScore() / (child.getVisits() * 100)
+                    + Math.sqrt(explorationParameter * Math.log(root.getVisits()) / child.getVisits()));
             if (uct > maxUct) {
                 maxUct = uct;
                 maxChild = child;

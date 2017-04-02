@@ -16,23 +16,28 @@ public class MaximumMinimumMoveSelection implements MoveSelectionFunction {
     @Override
     public Move selectMove(MCTSNode root) {
         Map<Move, List<MCTSNode>> children = root.getChildrenMap();
-        Move bestMove = null;
-        double scoreRatio = Double.MIN_VALUE;
+        Move bestMove = root.getChildren().get(0).getMove();
+        double maxRatio = Double.MIN_VALUE;
 
         for(Move move : children.keySet()) {
             List<MCTSNode> nodes = children.get(move);
-            int totalVisits = 0;
-            int totalScore = 0;
+            double minRatio = Double.MAX_VALUE;
+            List<Move> secondMove = null;
             for(MCTSNode node : nodes) {
-                totalVisits += node.getVisits();
-                totalScore += node.getScore();
+                double ratio = node.getScore() / node.getVisits();
+                System.out.println("Calculating: " + node.getJointMoves() + " - Ratio: " + ratio);
+                if (ratio < minRatio) {
+                    minRatio = ratio;
+                    secondMove = node.getJointMoves();
+                }
             }
-            double ratio = (double) totalScore / (double) totalVisits;
-            if (ratio > scoreRatio) {
-                scoreRatio = ratio;
+            if (minRatio > maxRatio) {
+                maxRatio = minRatio;
                 bestMove = move;
             }
+            System.out.println("Evaluating: " + move.toString() + " " + secondMove + " - Ratio: " + minRatio);
         }
         return bestMove;
+
     }
 }
